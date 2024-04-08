@@ -1,11 +1,11 @@
-export default function Card({charUrl, charName}) {
+export default function Card(props) {
   return (
     <div
       className="card"
     >
-      <img src={charUrl} rel="card"/>
+      <img src={props.charUrl} rel="card"/>
       <p>
-        {charName}
+        {props.charName.charAt(0).toUpperCase() + props.charName.slice(1)}
       </p>
     </div>
   )

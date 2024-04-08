@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 function fetchList(url) {
-  const [data, setData] = useState()
+  const [data, setData] = useState();
   
   useEffect(() => {
     let cleanUp = false;
