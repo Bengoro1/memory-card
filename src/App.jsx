@@ -6,7 +6,10 @@ export default function App() {
   const [difficulty, setDifficulty] = useState('Easy');
   const [play, setPlay] = useState(false);
   const [pokemon, setPokemon] = useState();
-  const [clicked, setClicked] = useState();
+  const [clicked, setClicked] = useState([]);
+  const [score, setScore] = useState(0);
+  const [highScore, setHighScore] = useState(0);
+  const [win, setWin] = useState();
   
   const characters = fetchList("https://pokeapi.co/api/v2/pokemon/?limit=100&offset=0");
 
@@ -41,6 +44,27 @@ export default function App() {
     return data;
   }
 
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  function handleClick(poke) {
+    const result = shuffleArray(pokemon);
+    setPokemon(result);
+    if (!clicked.includes(poke)) {      
+      setClicked([...clicked, poke]);
+      setScore(score + 1);
+      if (score >= highScore) setHighScore(score + 1);
+      if ((clicked.length + 1) == pokemon.length) newGame('won');
+    } else {
+      newGame('lost');
+    }
+  }
+
   function pickPokemon() {
     const arr = [];
     for (let i = 0; i < diffN; i++) {
@@ -56,6 +80,15 @@ export default function App() {
       setPokemon(values);
     })
   }
+
+  function newGame(result) {
+    console.log(result);
+    setWin(result);
+    setDifficulty('');
+    setScore(0);
+    setClicked([]);
+    setPlay(!play);
+  }
     
   return (
     <>
@@ -68,8 +101,9 @@ export default function App() {
         </>
       ) : (
         <div>
+          <p>Score: {score} High score: {highScore}</p>
           {pokemon.map((poke) => {
-            return <Card key={poke.id} charUrl={poke.sprites.front_default} charName={poke.name} />
+            return <Card key={poke.id} onClick={() => handleClick(poke.name)} charUrl={poke.sprites.front_default} charName={poke.name}  />
           })}
         </div>
       )}

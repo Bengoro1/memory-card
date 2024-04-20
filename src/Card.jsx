@@ -1,6 +1,7 @@
 export default function Card(props) {
   return (
     <div
+      onClick={props.onClick}
       className="card"
     >
       <img src={props.charUrl} rel="card"/>
