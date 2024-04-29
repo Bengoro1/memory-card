@@ -10,6 +10,7 @@ export default function App() {
   const [score, setScore] = useState(0);
   const [highScore, setHighScore] = useState(0);
   const [win, setWin] = useState();
+  const [resultText, setResultText] = useState('');
   
   const characters = fetchList("https://pokeapi.co/api/v2/pokemon/?limit=100&offset=0");
 
@@ -82,7 +83,7 @@ export default function App() {
   }
 
   function newGame(result) {
-    console.log(result);
+    setResultText(`You got ${score} out of ${pokemon.length} Pokemon cards right`);
     setWin(result);
     setDifficulty('');
     setScore(0);
@@ -92,20 +93,31 @@ export default function App() {
     
   return (
     <>
+      <p className='scoreboard'>Score: {score} High score: {highScore}</p>
       {!play ? (
         <>
-          Difficulty: 
-          <DiffButton text='Easy'></DiffButton>
-          <DiffButton text='Medium'></DiffButton>
-          <DiffButton text='Hard'></DiffButton> 
+          {!win && (<p>Click on all Pokemon cards without clicking on the same 2 times</p>)}
+          {win && (
+            <>
+              <p>You {win}, you want to try again?</p>
+              <p>{resultText}</p>
+            </>
+          )}
+          <div className='difficulty'>
+            Difficulty: 
+            <DiffButton text='Easy'></DiffButton>
+            <DiffButton text='Medium'></DiffButton>
+            <DiffButton text='Hard'></DiffButton>
+          </div> 
         </>
       ) : (
-        <div>
-          <p>Score: {score} High score: {highScore}</p>
-          {pokemon.map((poke) => {
-            return <Card key={poke.id} onClick={() => handleClick(poke.name)} charUrl={poke.sprites.front_default} charName={poke.name}  />
-          })}
-        </div>
+        <>
+          <div className='card-container'>
+            {pokemon.map((poke) => {
+              return <Card key={poke.id} onClick={() => handleClick(poke.name)} charUrl={poke.sprites.front_default} charName={poke.name}  />
+            })}
+          </div>
+        </>
       )}
     </>
   )
